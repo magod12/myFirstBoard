@@ -6,36 +6,226 @@
     <title th:text="${article.title}">게시글</title>
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <style>
+        /* Inter 폰트 적용 */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #2c2c2c;
+            color: #f3f4f6;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+
+        header {
+            background-color: black;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fcd34d;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        header .logo span {
+            margin-right: 0.5rem;
+        }
+
+        header nav {
+            display: flex;
+            align-items: center;
+        }
+
+        header nav a,
+        header nav span,
+        header nav button {
+            color: #fcd34d;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            margin-left: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        header nav a:hover,
+        header nav button:hover {
+            color: #fbbf24;
+        }
+
+
+        .top-bar {
+            background-color: #fcd34d;
+            padding: 0.25rem 0;
+            border-radius: 0;
+            text-align: center;
+        }
+
+
+        .article-detail-section {
+            background-color: #3a3a3a;
+            border: 1px solid #4a4a4a;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 900px;
+        }
+
+        .article-detail-section h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f3f4f6;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #555;
+            padding-bottom: 1rem;
+        }
+
+        .article-content {
+            font-size: 1rem;
+            color: #a0a0a0;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            white-space: pre-wrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #4a4a4a;
+        }
+
+        .action-button, .back-button {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+
+        .action-button.edit {
+            background-color: #fcd34d;
+            color: black;
+        }
+
+        .action-button.edit:hover {
+            background-color: #fbbf24;
+        }
+
+
+        .action-button.delete {
+            background-color: #a45a52;
+            color: white;
+        }
+
+        .action-button.delete:hover {
+            background-color: #924a42;
+        }
+
+        .back-button {
+            background-color: #555;
+            color: white;
+        }
+
+        .back-button:hover {
+            background-color: #777;
+        }
+
+        footer {
+            background-color: black;
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+            text-align: center;
+        }
+
+        footer p {
+            color: #9ca3af;
+        }
+    </style>
 </head>
 <body>
 <header>
-    <a href="/" class="brand">🌀 임시로고</a>
-    <div>
-      <span sec:authorize="isAnonymous()">
-        <a href="/login">로그인</a>
-        <a href="/join">회원가입</a>
-      </span>
-        <span sec:authorize="isAuthenticated()">
-        <span>안녕하세요, <strong th:text="${displayName}"></strong>님!</span>
-        <form method="post" action="/logout" style="display:inline;">
-          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-          <button type="submit">로그아웃</button>
-        </form>
-      </span>
+    <div class="container">
+        <a href="/" class="logo">
+            <span>😂</span> 임시로고
+        </a>
+        <nav>
+            <span sec:authorize="isAnonymous()">
+                <a href="/login">로그인</a>
+                <a href="/join">회원가입</a>
+            </span>
+            <span sec:authorize="isAuthenticated()">
+                <span>안녕하세요, <strong th:text="${displayName}"></strong>님!</span>
+                <form method="post" action="/logout" style="display:inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit">로그아웃</button>
+                </form>
+            </span>
+        </nav>
     </div>
 </header>
+<div class="top-bar"></div>
+
 <main>
-    <h1 th:text="${article.title}">제목</h1>
-    <input type="hidden" id="article-id" th:value="${article.id}">
-    <div th:text="${article.content}">내용</div>
+    <div class="container">
+        <div class="article-detail-section">
+            <h1 th:text="${article.title}">제목</h1>
+            <input type="hidden" id="article-id" th:value="${article.id}">
+            <div class="article-content" th:text="${article.content}">내용</div>
 
-    <div th:if="${isOwner}">
-        <a th:href="@{'/articles/' + ${article.id} + '/edit'}" id="modify-btn-link">수정</a>
-        <button id="delete-btn">삭제</button>
+            <div th:if="${isOwner}" class="action-buttons">
+                <a th:href="@{'/articles/' + ${article.id} + '/edit'}" id="modify-btn-link" class="action-button edit">수정</a>
+                <button id="delete-btn" class="action-button delete">삭제</button>
+            </div>
+
+            <div class="action-buttons">
+                <a href="/articles" class="back-button">목록으로</a>
+            </div>
+        </div>
     </div>
-
-    <p><a href="/articles">목록</a></p>
 </main>
 <script src="/js/article.js" defer></script>
+<footer>
+    <div class="container">
+        <p>&copy; 2025 - 08 - 19.</p>
+    </div>
+</footer>
 </body>
 </html>
